@@ -26,7 +26,7 @@ def deploy():
     governance = accounts.at(BADGER_DEV_MULTISIG, force=True)
 
     controller = Controller.deploy({"from": deployer})
-    controller.initialize(BADGER_DEV_MULTISIG, strategist, keeper, BADGER_DEV_MULTISIG)
+    controller.initialize(BADGER_DEV_MULTISIG, strategist, keeper, BADGER_DEV_MULTISIG, {"from": deployer})
 
     sett = SettV3.deploy({"from": deployer})
     sett.initialize(
@@ -38,10 +38,11 @@ def deploy():
         False,
         "prefix",
         "PREFIX",
+        {"from": deployer}
     )
 
     sett.unpause({"from": governance})
-    controller.setVault(WANT, sett)
+    controller.setVault(WANT, sett, {"from": deployer})
 
     ## TODO: Add guest list once we find compatible, tested, contract
     # guestList = VipCappedGuestListWrapperUpgradeable.deploy({"from": deployer})
@@ -60,6 +61,7 @@ def deploy():
         guardian,
         PROTECTED_TOKENS,
         FEES,
+        {"from": deployer}
     )
 
     ## Tool that verifies bytecode (run independetly) <- Webapp for anyone to verify
